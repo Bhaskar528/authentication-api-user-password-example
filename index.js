@@ -44,7 +44,7 @@ app.get('/books/', async (request, response) => {
 app.post('/users/', async (request, response) => {
   const {username, name, password, gender, location} = request.body
 
-  const hashedpassword = await bcrypt.hash(request.body.password, 10)
+  const hashedPassword = await bcrypt.hash(request.body.password, 10)
 
   const selectUserQuery = `
     SELECT 
@@ -70,8 +70,9 @@ app.post('/users/', async (request, response) => {
           '${location}'  
         );`
 
-    await db.run(createUserQuery)
-    response.send('User Created Successfully')
+    const dbResponse = await db.run(createUserQuery)
+    const responseId = dbResponse.lastID
+    response.send(`User Created Successfully ${responseId}`)
   } else {
     // invalid user case
     response.status('400')
